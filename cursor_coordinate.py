@@ -1,5 +1,6 @@
 from pdf2image import convert_from_path
 import cv2
+import clipboard
 import os
 
 height, width = 0, 0
@@ -8,7 +9,10 @@ height, width = 0, 0
 def on_mouse_click(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
         print(
-            f"Position: {int(round(x * 72 / 100, 0))}, {int(round((height / 2 - y) * 72 / 100 - 5, 0))}"
+            f"Position: ({int(round(x * 72 / 100, 0))}, {int(round((height / 2 - y) * 72 / 100 - 5, 0))}) 복사"
+        )
+        clipboard.copy(  # 클립 보드에 x, y 복사
+            f"{int(round(x * 72 / 100, 0))}, {int(round((height / 2 - y) * 72 / 100 - 5, 0))}"
         )
 
 
@@ -20,6 +24,10 @@ def get_cursor_coordinates():
     pdf_file_path = "file.pdf"
 
     pages = convert_from_path("./" + pdf_file_path)
+
+    # source 디렉토리 생성
+    if not os.path.exists("./source/"):
+        os.mkdir("source")
 
     # pdf 이미지 변환 후 /source에 넣음
     for i, page in enumerate(pages):
