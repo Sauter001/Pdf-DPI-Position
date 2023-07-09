@@ -1,4 +1,3 @@
-import PyPDF2
 from pdf2image import convert_from_path
 import cv2
 import os
@@ -14,15 +13,15 @@ def on_mouse_click(event, x, y, flags, param):
 
 
 def get_cursor_coordinates():
-    # Get the page number from the user
+    # 페이지 번호 입력
     page_number = int(input("페이지 번호: "))
 
-    # Open the PDF file
+    # 사용할 PDF
     pdf_file_path = "file.pdf"
 
     pages = convert_from_path("./" + pdf_file_path)
 
-    # 소스 로드
+    # pdf 이미지 변환 후 /source에 넣음
     for i, page in enumerate(pages):
         if not os.path.isfile("./source/" + "file" + "_" + str(i) + ".png"):
             page.save("./source/" + "file" + "_" + str(i) + ".png", "PNG")
@@ -32,10 +31,12 @@ def get_cursor_coordinates():
     height, width = img.shape[:2]
     img = cv2.resize(img, dsize=(width // 2, height // 2))
     cv2.namedWindow("Page Image")
+    # cv2.namedWindow("Page Image", cv2.WINDOW_NORMAL) # 하단 좌표 확인할 시 활성화. 사진이 세로로 압축됨
+
     cv2.imshow("Page Image", img)
     cv2.setMouseCallback("Page Image", on_mouse_click)
 
-    # Wait for the user to close the window
+    # 윈도우 닫기 대기
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
